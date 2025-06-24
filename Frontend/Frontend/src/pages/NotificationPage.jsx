@@ -1,9 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  acceptFriendRequest,
-  getFriendRequests,
-  rejectFriendRequest
-} from "../lib/api";
+import { acceptFriendRequest, getFriendRequests } from "../lib/api";
 import {
   BellIcon,
   ClockIcon,
@@ -30,13 +26,6 @@ const NotificationsPage = () => {
 
   const incomingRequests = friendRequests?.incomingRequests || [];
   const acceptedRequests = friendRequests?.acceptedRequests || [];
-
-  const { mutate: rejectRequestMutation } = useMutation({
-    mutationFn: rejectFriendRequest,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["friendRequests"] });
-    }
-  });
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -90,21 +79,14 @@ const NotificationsPage = () => {
                               </div>
                             </div>
                           </div>
-                          <div className="flex gap-2 ">
-                            <button
-                              className="btn btn-primary btn-sm"
-                              onClick={() => acceptRequestMutation(request._id)}
-                              disabled={isPending}
-                            >
-                              Accept
-                            </button>
-                            <button
-                              className="btn btn-error btn-sm"
-                              onClick={() => rejectRequestMutation(request._id)}
-                            >
-                              Reject
-                            </button>
-                          </div>
+
+                          <button
+                            className="btn btn-primary btn-sm"
+                            onClick={() => acceptRequestMutation(request._id)}
+                            disabled={isPending}
+                          >
+                            Accept
+                          </button>
                         </div>
                       </div>
                     </div>

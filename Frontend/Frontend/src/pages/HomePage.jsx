@@ -4,10 +4,9 @@ import {
   getOutgoingFriendReqs,
   getRecommendedUsers,
   getUserFriends,
-  sendFriendRequest,
-  unFriend
+  sendFriendRequest
 } from "../lib/api";
-import { Link, useParams } from "react-router";
+import { Link } from "react-router";
 import {
   CheckCircleIcon,
   MapPinIcon,
@@ -45,11 +44,6 @@ const HomePage = () => {
       queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] })
   });
 
-  const { mutate: unFriendMutation } = useMutation({
-    mutationFn: unFriend,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["friends"] })
-  });
-
   useEffect(() => {
     const outgoingIds = new Set();
     if (outgoingFriendReqs && outgoingFriendReqs.length > 0) {
@@ -59,10 +53,6 @@ const HomePage = () => {
       setOutgoingRequestsIds(outgoingIds);
     }
   }, [outgoingFriendReqs]);
-
-  const handleUnFriend = (friendId) => {
-    unFriendMutation(friendId);
-  };
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -86,11 +76,7 @@ const HomePage = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {friends.map((friend) => (
-              <FriendCard
-                key={friend._id}
-                friend={friend}
-                handleUnFriend={() => unFriendMutation(friend._id)}
-              />
+              <FriendCard key={friend._id} friend={friend} />
             ))}
           </div>
         )}

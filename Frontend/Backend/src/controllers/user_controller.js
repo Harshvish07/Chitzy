@@ -65,18 +65,16 @@ export async function sendFriendRequest(req, res) {
       $or: [
         { sender: myId, recipient: recepientId },
         { sender: recepientId, recipient: myId }
-      ],
-      status: "pending"
+      ]
     });
 
-    if (existingRequest && existingRequest.status === "pending") {
+    if (existingRequest) {
       return res.status(400).json({ message: "Friend request already exists" });
     }
 
     const friendRequest = await FriendRequest.create({
       sender: myId,
-      recipient: recepientId,
-      status: "pending"
+      recipient: recepientId
     });
 
     res.status(200).json({ friendRequest });
@@ -154,63 +152,5 @@ export async function getOutgoingFriendRequests(req, res) {
   } catch (error) {
     console.log("Error in getOutgoingFriendRequests:", error.message);
     res.status(500).json({ message: " internal Server error" });
-  }
-}
-
-export async function rejectFriendRequest(req, res) {
-  try {
-    const { id: requestId } = req.params;
-
-    // Find the friend request
-    const friendRequest = await FriendRequest.findById(requestId);
-    if (!friendRequest) {
-      return res.status(404).json({ message: "Friend request not found" });
-    }
-
-    // Verify current user is the recipient of the friend request
-    if (friendRequest.recipient.toString() !== req.user.id) {
-      return res.status(401).json({
-        message: "You are not authorized to reject this friend request"
-      });
-    }
-
-    // Update status to rejected
-    friendRequest.status = "rejected";
-    await friendRequest.save();
-
-    res.status(200).json({ message: "Friend request rejected successfully" });
-  } catch (error) {
-    console.log("Error in rejectFriendRequest:", error.message);
-    res.status(500).json({ message: "Internal server error" });
-  }
-}
-
-export async function unFriend(req, res) {
-  try {
-    const { id: userId } = req.params;
-
-    // Prevent self-unfriend
-    if (req.user.id === userId) {
-      return res.status(400).json({ message: "You cannot unfriend yourself" });
-    }
-
-    // Check if other user exists
-    const userToUnfriend = await User.findById(userId);
-    if (!userToUnfriend) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Remove from each other's friends lists
-    await User.findByIdAndUpdate(req.user.id, {
-      $pull: { friends: userId }
-    });
-    await User.findByIdAndUpdate(userId, {
-      $pull: { friends: req.user.id }
-    });
-
-    res.status(200).json({ message: "Unfriend successful" });
-  } catch (error) {
-    console.log("Error in unFriend:", error.message);
-    res.status(500).json({ message: "Internal server error" });
   }
 }

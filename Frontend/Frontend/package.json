@@ -1,17 +1,4 @@
 {
-<<<<<<< HEAD
-  "name": "semifly",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "build": "npm install --prefix Backend && npm install --prefix Frontend && npm run build --prefix Frontend",
-    "start": "npm run start --prefix Backend "
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
-=======
   "name": "frontend",
   "private": true,
   "version": "0.0.0",
@@ -53,5 +40,4 @@
     "tailwindcss": "^3.4.17",
     "vite": "^6.3.5"
   }
->>>>>>> 4c7c49ee (RejectFriend, Unfriend, backend, frontend)
 }
