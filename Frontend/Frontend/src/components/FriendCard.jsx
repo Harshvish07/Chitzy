@@ -1,11 +1,7 @@
 import { Link } from "react-router";
 import { LANGUAGE_TO_FLAG } from "../constants";
-import ConfirmationDialog from "./ConfirmationDialog";
-import { useState } from "react";
 
-const FriendCard = ({ friend, handleUnFriend }) => {
-  const [isDialogOpen, setDialogOpen] = useState(false);
-  const [friendId, setFriendId] = useState(null);
+const FriendCard = ({ friend }) => {
   return (
     <div className="card bg-base-200 hover:shadow-md transition-shadow">
       <div className="card-body p-4">
@@ -15,15 +11,6 @@ const FriendCard = ({ friend, handleUnFriend }) => {
             <img src={friend.profilePicture} alt={friend.fullName} />
           </div>
           <h3 className="font-semibold truncate">{friend.fullName}</h3>
-          <button
-            className="btn btn-sm btn-error ml-auto rounded-lg"
-            onClick={() => {
-              setFriendId(friend._id);
-              setDialogOpen(true);
-            }}
-          >
-            UnFriend
-          </button>
         </div>
 
         <div className="flex flex-wrap gap-1.5 mb-3">
@@ -41,17 +28,6 @@ const FriendCard = ({ friend, handleUnFriend }) => {
           Message
         </Link>
       </div>
-      <ConfirmationDialog
-        isOpen={isDialogOpen}
-        onClose={() => {
-          setDialogOpen(false);
-        }}
-        onConfirm={handleUnFriend}
-        title="Are you sure you want to unFriend?"
-        confirmText="UnFriend"
-        cancelText="Cancel"
-        theme="bg-neutral text-neutral-content"
-      />
     </div>
   );
 };
